@@ -2,19 +2,41 @@ package main
 
 import (
 	"blockchain/block"
+	"blockchain/prime_number"
 	"fmt"
+	"os"
+	"os/signal"
+	"strconv"
+	"syscall"
 )
 
 func main() {
-	blockchain := block.InitBlockchain()
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	
-	blockchain.AddNewBlock([]byte("test 0"))
-	blockchain.AddNewBlock([]byte("test 1"))
-	blockchain.AddNewBlock([]byte("test 2"))
-	blockchain.AddNewBlock([]byte("test 3"))
+	blockchain := block.InitBlockchain()
 
-	for _, b := range blockchain.GetBlocks() {
-		fmt.Println(b)
+	go func() {
+		<-sigs
+		for _, b := range blockchain.GetBlocks() {
+			fmt.Println(b)
+		}
+		os.Exit(0)
+	}()
+
+
+	ch := make(chan int)
+	go prime_number.Generate(ch)
+
+	for {
+		prime := <-ch
+		fmt.Println("Add in BC:", prime)
+		blockchain.AddNewBlock([]byte(strconv.Itoa(prime)))
+		ch1 := make(chan int)
+		go prime_number.Filter(ch, ch1, prime)
+		ch = ch1	
 	}
+
+	
 
 }

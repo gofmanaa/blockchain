@@ -7,7 +7,7 @@ type Blockchain struct {
 
 func InitBlockchain() *Blockchain {
 	blockchain := &Blockchain{}
-	initBlock := CreateNewBlock([]byte("Init Block"), []byte{})
+	initBlock := CreateNewBlock([]byte("1"), []byte{})
 	blockchain.blocks = append(blockchain.blocks, initBlock)
 	blockchain.length++
 

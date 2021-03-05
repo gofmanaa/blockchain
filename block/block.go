@@ -43,7 +43,7 @@ func (b *Block) GetHash() []byte {
 }
 
 func (b *Block) String() string {
-	return fmt.Sprintf("hash:%x, data:%s, prevHash:%x", b.hash, b.data, b.prevHash)
+	return fmt.Sprintf("hash:%x, prevHash:%x, data:%s", b.hash, b.prevHash,b.data)
 }
 
 
