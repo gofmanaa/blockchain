@@ -2,6 +2,7 @@ package main
 
 import (
 	"blockchain/block"
+	"blockchain/block/validators"
 	"blockchain/prime_number"
 	"fmt"
 	"os"
@@ -21,6 +22,9 @@ func main() {
 		for _, b := range blockchain.GetBlocks() {
 			fmt.Println(b)
 		}
+		if !validators.Validate(blockchain) {
+			fmt.Println("BC not valid")
+		}
 		os.Exit(0)
 	}()
 
@@ -30,7 +34,7 @@ func main() {
 
 	for {
 		prime := <-ch
-		fmt.Println("Add in BC:", prime)
+		//fmt.Println("Add in BC:", prime)
 		blockchain.AddNewBlock([]byte(strconv.Itoa(prime)))
 		ch1 := make(chan int)
 		go prime_number.Filter(ch, ch1, prime)
